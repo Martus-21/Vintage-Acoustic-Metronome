@@ -1,0 +1,277 @@
+:root{
+  --met-width: 220px;
+  --met-height: 340px;
+  --wood-img: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+}
+
+/* Basic page */
+*{box-sizing:border-box}
+body{
+  possition: absolute;
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  transition: background .3s, color .3s;
+  background:#121212;
+  color:#fff;
+  z-index: 0;
+}
+
+/* App container */
+.app{
+  width:980px;
+  max-width:95vw;
+  text-align:center;
+  z-index: 10;
+
+}
+
+/* Stage (table + metronome) */
+.stage{
+  position:relative;
+  height:360px;
+  margin:8px auto 18px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  z-index: -100;
+  border: 10px;
+  border: 2px solid white;
+  border-radius: 20px;
+}
+
+/* Table surface sits behind the metronome */
+.table-surface{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:70px;
+  background: linear-gradient(180deg,#6f533d,#3b2a20);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,.6), 0 12px 30px rgba(0,0,0,.6);
+  z-index:10;
+  border-top: 2px solid rgba(255,255,255,0.02);
+  
+}
+
+/* Visual wrapper for metronome - sits above table */
+.metronome-viz{
+  position:relative;
+  z-index: 20;
+  width:var(--met-width);
+  height:var(--met-height);
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+ 
+}
+
+/* Triangular/trapezoid body */
+.metronome-body{
+    width: var(--met-width);
+  height: var(--met-height);
+  position: relative;
+  z-index: 20;
+  cursor: pointer;
+
+  /* triangular shape using clip-path */
+  clip-path: polygon(50% 0%, 82% 22%, 84% 100%, 16% 100%, 18% 22%);
+  
+  
+  
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1) 3%, rgba(0, 0, 0, 0.95) 100%),
+    var(--wood-img);
+  background-size: cover;
+
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.8); /* increased opacity */
+  
+  display: block;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+}
+
+/* small glossy highlight */
+.metronome-body .highlight{
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26) 1%, transparent 30%);
+  pointer-events:none;
+  mix-blend-mode:overlay;
+  z-index: -10;
+ 
+}
+
+/* top plate pivot spot */
+.top-plate{
+  position:absolute;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  width:48px;
+  height:8px;
+  background:linear-gradient(180deg,#b7a07d,#6b573b);
+  border-radius:6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,.45) inset;
+  z-index:30;
+}
+
+/* Tempo scale on left side */
+.tempo-scale{
+  position:absolute;
+  left: 95px;
+  top:34px;
+  width:56px;
+  height:260px;
+  color:rgba(255,255,255,0.9);
+  font-size:12px;
+  line-height:28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:flex-start;
+  padding-left:6px;
+  z-index: 32;
+  pointer-events:none;
+  text-shadow:0 1px 0 rgba(0,0,0,0.6);
+  font-weight:600;
+}
+
+/* pointer that shows current BPM on the scale */
+.tempo-pointer{
+  position:absolute;
+  left:-15px;
+  width:16px;
+  height:10px;
+  background:gold;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transform-origin:center;
+  z-index:33;
+  box-shadow:0 2px 6px rgba(0,0,0,.4);
+  opacity: 0.01;
+  
+}
+
+/* Pendulum anchored at bottom of the metronome body */
+.pendulum{
+  position: absolute;
+  bottom:36px; /* lift from base */
+  left:50%;
+  transform-origin:50% 100%;
+  width:1px;
+  height:260px;
+  z-index:100; /* ensure it's in front */
+  pointer-events:none;
+}
+
+/* rod which visually extends upwards (from bottom toward top) */
+.rod{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:4px;
+  height:220px;
+  background: linear-gradient(180deg,#d6c7a4,#7a6a4d);
+  border-radius:2px;
+  box-shadow: 0 3px 6px rgba(0,0,0,.45);
+  z-index: 100;
+}
+
+/* golden arrow near the top of the rod */
+.arrow{
+  position:absolute;
+  bottom:204px; /* small offset from top of rod */
+  left:50%;
+  transform:translateX(-50%) rotate(0deg);
+  width:0;
+  height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-bottom:18px solid gold;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.45));
+  z-index: 145;
+}
+
+/* sliding weight: positioned by `bottom` from the bottom of .pendulum */
+.weight{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:80px; /* initial position */
+  width:34px;
+  height:18px;
+  border-radius:4px;
+  background: linear-gradient(180deg,#5a4d3f,#2c2218);
+  box-shadow: 0 3px 8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,0.06);
+  z-index:46;
+}
+
+/* fake buttons near bottom */
+.buttons-panel{
+  position:absolute;
+  bottom:22px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:28;
+}
+.fake-button{
+  width:22px;height:10px;background:#111;border-radius:3px;margin:6px auto;
+  box-shadow:0 2px 4px rgba(0,0,0,.6);
+}
+
+/* legs (visual footprint) */
+.legs{
+  position:absolute;
+  bottom:-6px;
+  left:50%;
+  transform:translateX(-50%);
+  width:120px;
+  height:22px;
+  border-radius:8px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.55);
+  background:transparent;
+  z-index:5;
+}
+
+/* beat dots below */
+.beat-dots{ display:flex; justify-content:center; gap:10px; margin-bottom:14px; z-index:12 }
+.beat-dots .dot{ width:14px;height:14px;border-radius:50%;background:#666;opacity:.28;transition:all .14s ease; transform:scale(.9) }
+.beat-dots .dot.active{ background: #ff5050; opacity:1; transform:scale(1.18) }
+
+/* Controls layout */
+.controls{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:center; margin:0 auto; width:720px; max-width:95vw; }
+.controls label{ text-align:left; font-weight:700; font-size:13px; }
+.tempo-row{ display:flex; align-items:center; gap:10px; margin-top:8px; }
+input[type="range"]{ width:100%; }
+select{ margin-top:8px; padding:6px; border-radius:6px; border:1px solid rgba(0,0,0,.2) }
+button{ padding:8px 12px; border-radius:8px; border:none; background:#222; color:#fff; cursor:pointer }
+.tempo-buttons{ grid-column: span 2; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:6px }
+
+/* Themes */
+.theme-dark {
+  background: #121212;
+  color: #fff;
+  position: relative;  /* <-- add this */
+  z-index: -100;
+}
+.theme-light {
+  background: #9b9b9b;
+  color: #111;
+  position: relative;  /* <-- add this */
+  z-index: -100;
+}
+.theme-ocean {
+  background: #082a3c;
+  color: #dff3f7;
+  position: relative;  /* <-- add this */
+  z-index: -100;
+}
+.tempo-scale {
+  color: white;
+}
+
