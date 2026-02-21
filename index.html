@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vintage Acoustic Metronome</title>
+
+  <!-- GSAP for animation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Howler for sound -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-dark">
+  <div class="app">
+    <h1>🎵 Vintage Acoustic Metronome</h1>
+
+    <!-- STAGE: table surface behind and metronome in front -->
+    <div class="stage">
+      <div class="table-surface" aria-hidden="true"></div>
+
+      <div class="metronome-viz">
+        <div class="metronome-body" id="metronomeClick" role="button" aria-pressed="false" title="Click to start/stop">
+          <!-- tempo scale (visual) -->
+          <div class="tempo-scale">
+            <div class="scale-mark">40</div>
+            <div class="scale-mark">80</div>
+            <div class="scale-mark">120</div>
+            <div class="scale-mark">160</div>
+            <div class="scale-mark">180</div>
+            <div class="scale-mark">240</div>
+            <div class="scale-mark">280</div>
+            <div class="scale-mark">320</div>
+            <div class="tempo-pointer" aria-hidden="true"></div>
+          </div>
+
+          <!-- top plate (visual pivot) -->
+          <div class="top-plate"></div>
+
+          <!-- pendulum: anchored at bottom of this box (transform-origin bottom center) -->
+          <div class="pendulum" id="pendulum">
+            <div class="rod"></div>
+            <div class="arrow" aria-hidden="true"></div>
+            <div class="weight" id="weight"></div>
+          </div>
+
+          <!-- glossy highlight and buttons -->
+          <div class="highlight"></div>
+          <div class="buttons-panel">
+            <div class="fake-button"></div>
+            <div class="fake-button"></div>
+          </div>
+
+          <!-- legs shadow for realism -->
+          <div class="legs" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- beat dots -->
+    <div id="beatDots" class="beat-dots" aria-hidden="true"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <label>
+        Tempo (BPM)
+        <div class="tempo-row">
+          <input id="tempo" type="range" min="40" max="320" step="1" value="100">
+          <span id="tempoValue">100</span>
+        </div>
+      </label>
+
+      <label>
+        Key Signature
+        <select id="keySignature">
+          <option value="2">2/4</option>
+          <option value="3">3/4</option>
+          <option value="4" selected>4/4</option>
+          <option value="5">5/4</option>
+          <option value="6">6/8</option>
+          <option value="7">7/8</option>
+          <option value="9">9/8</option>
+          <option value="12">12/8</option>
+        </select>
+      </label>
+
+      <label>
+        Volume
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+      </label>
+
+      <label>
+        Sound
+        <select id="soundSelect">
+          <option value="click">Click</option>
+          <option value="wood">Wood</option>
+          <option value="beep">Beep</option>
+        </select>
+      </label>
+
+      <label>
+        Theme
+        <select id="themeSelect">
+          <option value="theme-dark">Dark</option>
+          <option value="theme-light">Light</option>
+          <option value="theme-ocean">Ocean</option>
+        </select>
+      </label>
+
+      <div class="tempo-buttons" aria-label="Italian tempo markings">
+        <button data-bpm="30">Grave</button>
+        <button data-bpm="50">Largo</button>
+        <button data-bpm="63">Larghetto</button>
+        <button data-bpm="72">Adagio</button>
+        <button data-bpm="88">Andante</button>
+        <button data-bpm="112">Moderato</button>
+        <button data-bpm="140">Allegro</button>
+        <button data-bpm="172">Vivace</button>
+        <button data-bpm="180">Presto</button>       <!-- you wanted Presto = 180 -->
+        <button data-bpm="220">Prestissimo</button>
+      </div>
+
+      <button id="startStopBtn">Start</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
